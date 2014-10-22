@@ -40,21 +40,6 @@ void loop() {
   unsigned long y_translated = (y_positive * 100) / MAX_MOUSE_RANGE;
   unsigned long joystick_x_translated = y_translated * MAX_JOYSTICK_RANGE;
   unsigned long joystick_x = joystick_x_translated / 100;
-
-  if(y_travel != 0) {
-    /*
-    Serial.print(" mouse travel=");
-    Serial.println(y_travel, DEC);
-    Serial.print(" y_positive=");
-    Serial.println(y_positive, DEC);
-    Serial.print(" y_translated=");
-    Serial.println(y_translated, DEC);
-    Serial.print(" joystick_x_translated=");
-    Serial.println(joystick_x_translated, DEC);
-    */
-    Serial.print(" joystick_x=");
-    Serial.println(joystick_x, DEC);
-  }
   Joystick.X(joystick_x);
 }
 
