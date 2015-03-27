@@ -1,2 +1,5 @@
 .DS_Store
 .build
+bin
+obj
+packages
