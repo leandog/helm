@@ -105,7 +105,11 @@ namespace Radiator {
         }
 
         void speechEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e) {
-            CurrentUrl = e.Result.Semantics.Value.ToString();
+            var target = e.Result.Semantics.Value.ToString();
+            if (target.StartsWith("app:"))
+                ApplicationRunningHelper.BringAppToFront(target.Replace("app:",""));
+            else
+                CurrentUrl = target;
         }
     }
 }
