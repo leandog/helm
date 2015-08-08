@@ -6,16 +6,9 @@
       xmlns:radiator="clr-namespace:Radiator"
       mc:Ignorable="d" 
       d:DesignWidth="1920" d:DesignHeight="1080" 
-      Title="BrowserPage">
+      Title="BrowserPage" Focusable="True">
     <Page.DataContext>
         <radiator:BrowserViewModel/>
     </Page.DataContext>
-    <Grid>
-      <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>  
-      <Button Content="Settings" Grid.Row="0" Width="150" Height="25" Click="OnSettingsClicked"/>
-      <WebBrowser x:Name="Browser" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" />
-    </Grid>
+    <WebBrowser x:Name="Browser" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 </Page>

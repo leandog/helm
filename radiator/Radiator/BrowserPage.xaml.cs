@@ -4,12 +4,11 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Radiator {
 
     public partial class BrowserPage : Page {
-
-
 
         public string CurrentUrl {
             get { return (string)GetValue(CurrentUrlProperty); }
@@ -20,7 +19,7 @@ namespace Radiator {
             DependencyProperty.Register("CurrentUrl", typeof(string), typeof(BrowserPage), new PropertyMetadata("", PropertyChangedCallback));
 
         private static void PropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-            var browser = (BrowserPage) sender;
+            var browser = (BrowserPage)sender;
             browser.Browser.Source = new Uri((string)args.NewValue);
         }
 
@@ -33,16 +32,12 @@ namespace Radiator {
             Loaded += BrowserPage_Loaded;
         }
 
-        void BrowserPage_Loaded(object sender, RoutedEventArgs e) {
+        private void BrowserPage_Loaded(object sender, RoutedEventArgs e) {
             ViewModel.LoadPageSettings();
         }
 
-        private void OnSettingsClicked(object sender, RoutedEventArgs e) {
-            NavigationService.Navigate(new SettingsPage());
-        }
-
         private BrowserViewModel ViewModel {
-            get { return (BrowserViewModel) DataContext; }
+            get { return (BrowserViewModel)DataContext; }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Navigation;
 using Akavache;
 
@@ -20,6 +21,19 @@ namespace Radiator {
                 Navigate(new SettingsPage());
             else
                 Navigate(new BrowserPage());
+        }
+        protected override void OnKeyDown(KeyEventArgs args) {
+            base.OnKeyDown(args);
+        }
+
+        private void CanShowSettings(object sender, CanExecuteRoutedEventArgs args) {
+            args.Handled = true;
+            args.CanExecute = (Content.GetType() != typeof(SettingsPage));
+        }
+
+        private void ShowSettings(object sender, ExecutedRoutedEventArgs args) {
+            args.Handled = true;
+            Navigate(new SettingsPage());
         }
     }
 }
