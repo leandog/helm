@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Radiator {
+
     public static class ApplicationRunningHelper {
 
         [DllImport("user32.dll")]

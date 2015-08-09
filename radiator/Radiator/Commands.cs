@@ -2,6 +2,7 @@
 using System.Windows.Input;
 
 namespace Radiator {
+
     public static class Commands {
 
         public static RoutedCommand ShowSettingsCommand = new RoutedCommand("ShowSettings", typeof (Commands),

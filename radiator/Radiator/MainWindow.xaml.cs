@@ -22,9 +22,6 @@ namespace Radiator {
             else
                 Navigate(new BrowserPage());
         }
-        protected override void OnKeyDown(KeyEventArgs args) {
-            base.OnKeyDown(args);
-        }
 
         private void CanShowSettings(object sender, CanExecuteRoutedEventArgs args) {
             args.Handled = true;

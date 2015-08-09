@@ -115,6 +115,8 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="RecognizedEventArgs.cs" />
+    <Compile Include="SpeechRecognizer.cs" />
     <Page Include="BrowserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
