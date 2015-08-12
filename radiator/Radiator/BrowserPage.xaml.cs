@@ -24,13 +24,18 @@ namespace Radiator {
             InitializeComponent();
 
             var binding = new Binding("CurrentUrl");
-            this.SetBinding(CurrentUrlProperty, binding);
+            SetBinding(CurrentUrlProperty, binding);
 
-            Loaded += BrowserPage_Loaded;
+            Loaded += OnBrowserPageLoaded;
+            Unloaded += OnBrowserPageUnloaded;
         }
 
-        private void BrowserPage_Loaded(object sender, RoutedEventArgs e) {
-            ViewModel.LoadPageSettings();
+        private void OnBrowserPageLoaded(object sender, RoutedEventArgs args) {
+            ViewModel.Load();
+        }
+
+        private void OnBrowserPageUnloaded(object sender, RoutedEventArgs args) {
+            ViewModel.Unload();
         }
 
         private BrowserViewModel ViewModel {
