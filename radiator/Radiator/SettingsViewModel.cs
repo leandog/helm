@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using Akavache;
+using System.Threading.Tasks;
 
 namespace Radiator {
 
@@ -31,8 +32,9 @@ namespace Radiator {
             PageSettings.Add(new PageMapping());
         }
 
-        public async void SavePageSettings() {
-            await BlobCache.UserAccount.InsertObject("Pages", PageSettings.ToList());
+        public async Task SavePageSettings() {
+            var pageSettings = PageSettings.Where(p => !string.IsNullOrWhiteSpace(p.Url) && !string.IsNullOrWhiteSpace(p.VoiceCommand)).ToList();
+            await BlobCache.UserAccount.InsertObject("Pages", pageSettings);
         }
     }
 }

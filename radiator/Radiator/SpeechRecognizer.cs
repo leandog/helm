@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
@@ -14,54 +15,53 @@ namespace Radiator {
 
         public event EventHandler<RecognizedEventArgs> SpeechRecognized;
 
-        private void FireSpeechRecognized(string value) {
-            if(SpeechRecognized != null)
-                SpeechRecognized(this, new RecognizedEventArgs(value)); 
-        }
-
         public void StartListening(IEnumerable<SemanticResultValue> voiceCommands) {
-
-            foreach (var potentialSensor in KinectSensor.KinectSensors) {
-                if (potentialSensor.Status == KinectStatus.Connected) {
-                    _kinect = potentialSensor;
-                    break;
-                }
-            }
-
-            if (null != _kinect) {
-                try {
-                    _kinect.Start();
-                } catch (IOException) {
-                    _kinect = null;
-                }
-            }
-
+            _kinect = GetKinectSensor();
             if (null == _kinect) {
                 return;
             }
 
-            RecognizerInfo recognizerInfo = GetKinectRecognizer();
-            if (null != recognizerInfo) {
-                _speechEngine = new SpeechRecognitionEngine(recognizerInfo.Id);
-
-                var directions = new Choices();
-                foreach (var voiceCommand in voiceCommands) {
-                    directions.Add(voiceCommand);
-                }
-                var grammarBuilder = new GrammarBuilder {Culture = recognizerInfo.Culture};
-                grammarBuilder.Append(directions);
-                var grammar = new Grammar(grammarBuilder);
-                _speechEngine.LoadGrammar(grammar);
-
-                _speechEngine.SpeechRecognized += OnKinectSpeechRecognized;
-
-                // For long recognition sessions (a few hours or more), it may be beneficial to turn off adaptation of the acoustic model. 
-                // This will prevent recognition accuracy from degrading over time.
-                _speechEngine.UpdateRecognizerSetting("AdaptationOn", 0);
-
-                _speechEngine.SetInputToAudioStream(_kinect.AudioSource.Start(), new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
-                _speechEngine.RecognizeAsync(RecognizeMode.Multiple);
+            var recognizerInfo = GetKinectRecognizer();
+            if (null == recognizerInfo) {
+                return;
             }
+
+            _speechEngine = new SpeechRecognitionEngine(recognizerInfo.Id);
+            _speechEngine.SpeechRecognized += OnKinectSpeechRecognized;
+
+            AddVoiceCommandsToSpeechEngine(_speechEngine, voiceCommands, recognizerInfo);
+
+            // For long recognition sessions (a few hours or more), it may be beneficial to turn off adaptation of the acoustic model. 
+            // This will prevent recognition accuracy from degrading over time.
+            _speechEngine.UpdateRecognizerSetting("AdaptationOn", 0);
+
+            _speechEngine.SetInputToAudioStream(_kinect.AudioSource.Start(), new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+            _speechEngine.RecognizeAsync(RecognizeMode.Multiple);
+        }
+
+        private void AddVoiceCommandsToSpeechEngine(SpeechRecognitionEngine speechEngine, IEnumerable<SemanticResultValue> voiceCommands, RecognizerInfo recognizerInfo) {
+            var directions = new Choices();
+            foreach (var voiceCommand in voiceCommands) {
+                directions.Add(voiceCommand);
+            }
+            var grammarBuilder = new GrammarBuilder {Culture = recognizerInfo.Culture};
+            grammarBuilder.Append(directions);
+            var grammar = new Grammar(grammarBuilder);
+            speechEngine.LoadGrammar(grammar);
+        }
+
+        private KinectSensor GetKinectSensor() {
+            var kinect = KinectSensor.KinectSensors.FirstOrDefault(s => s.Status == KinectStatus.Connected);
+
+            if (null != kinect) {
+                try {
+                    kinect.Start();
+                } catch (IOException) {
+                    kinect = null;
+                }
+            }
+
+            return kinect;
         }
 
         private static RecognizerInfo GetKinectRecognizer() {
@@ -79,5 +79,11 @@ namespace Radiator {
             var target = args.Result.Semantics.Value.ToString();
             FireSpeechRecognized(target);
         }
+
+        private void FireSpeechRecognized(string value) {
+            if(SpeechRecognized != null)
+                SpeechRecognized(this, new RecognizedEventArgs(value)); 
+        }
+
     }
 }

@@ -19,11 +19,8 @@ namespace Radiator {
             ViewModel.AddPage();
         }
 
-        private void OnSaveClicked(object sender, RoutedEventArgs args) {
-            ViewModel.SavePageSettings();
-        }
-
-        private void OnExitClicked(object sender, RoutedEventArgs args) {
+        private async void OnSaveClicked(object sender, RoutedEventArgs args) {
+            await ViewModel.SavePageSettings();
             NavigationService.Navigate(new BrowserPage());
         }
 

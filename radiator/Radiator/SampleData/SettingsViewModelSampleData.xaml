@@ -1,0 +1,14 @@
+﻿<Radiator:SettingsViewModel xmlns:Radiator="clr-namespace:Radiator">
+	<Radiator:SettingsViewModel.PageSettings>
+		<Radiator:PageMapping Url="Cras donec duis" VoiceCommand="Class curae nam"/>
+		<Radiator:PageMapping Url="Sed dis" VoiceCommand="Aenean maecenas"/>
+		<Radiator:PageMapping Url="Curabitur mauris" VoiceCommand="Praesent vestibulum adipiscing"/>
+		<Radiator:PageMapping Url="Est hac etiam aliquam" VoiceCommand="Nunc parturient nullam"/>
+		<Radiator:PageMapping Url="Integer bibendum" VoiceCommand="Fusce accumsan"/>
+		<Radiator:PageMapping Url="Vestibulum ante aptent mus arcu" VoiceCommand="Amet leo lorem quisque"/>
+		<Radiator:PageMapping Url="Convallis dictumst dignissim vivamus morbi" VoiceCommand="Phasellus diam consequat nec vestibulum"/>
+		<Radiator:PageMapping Url="Parturient eleifend" VoiceCommand="Auctor congue adipiscing"/>
+		<Radiator:PageMapping Url="Elementum vestibulum dictum" VoiceCommand="Eget facilisi nulla cursus faucibus"/>
+		<Radiator:PageMapping Url="Vestibulum lectus" VoiceCommand="Aliquam aliquet"/>
+	</Radiator:SettingsViewModel.PageSettings>
+</Radiator:SettingsViewModel>
