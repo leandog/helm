@@ -38,6 +38,9 @@ namespace Radiator {
 
         public async void Load() {
             var pages = await BlobCache.UserAccount.GetOrCreateObject("Pages", () => new List<PageMapping>());
+            if (pages.Count == 0)
+                return;
+
             pages.ForEach(mapping => _pageSettings.Add(mapping));
 
             _speechRecognizer.SpeechRecognized += OnSpeechRecognized;
@@ -52,7 +55,8 @@ namespace Radiator {
         }
 
         public void Unload() {
-            _pageCycleTimer.Dispose();
+            if(_pageCycleTimer != null)
+                _pageCycleTimer.Dispose();
         }
 
         private void OnPageCycleTimer(object state) {
