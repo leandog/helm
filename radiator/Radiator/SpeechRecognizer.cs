@@ -39,6 +39,17 @@ namespace Radiator {
             _speechEngine.RecognizeAsync(RecognizeMode.Multiple);
         }
 
+        public void StopListening() {
+            if(_speechEngine != null) {
+                _speechEngine.SpeechRecognized -= OnKinectSpeechRecognized;
+                _speechEngine.Dispose();
+            }
+
+            if(_kinect != null) {
+                _kinect.Dispose();
+            }
+        }
+
         private void AddVoiceCommandsToSpeechEngine(SpeechRecognitionEngine speechEngine, IEnumerable<SemanticResultValue> voiceCommands, RecognizerInfo recognizerInfo) {
             var directions = new Choices();
             foreach (var voiceCommand in voiceCommands) {
