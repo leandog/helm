@@ -63,6 +63,9 @@ namespace Radiator {
         }
 
         public void Unload() {
+            if (_speechRecognizer != null)
+                _speechRecognizer.StopListening();
+
             if(_pageCycleTimer != null)
                 _pageCycleTimer.Dispose();
         }
