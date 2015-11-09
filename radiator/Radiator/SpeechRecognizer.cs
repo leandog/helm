@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if KINECT
 using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
+#endif
 
 namespace Radiator {
 
     public class SpeechRecognizer {
 
+#if KINECT
         private KinectSensor _kinect;
         private SpeechRecognitionEngine _speechEngine;
 
@@ -84,6 +87,6 @@ namespace Radiator {
             if(SpeechRecognized != null)
                 SpeechRecognized(this, new RecognizedEventArgs(value)); 
         }
-
+#endif
     }
 }

@@ -7,7 +7,9 @@ using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Akavache;
+#if KINECT
 using Microsoft.Speech.Recognition;
+#endif
 
 namespace Radiator {
 
@@ -18,7 +20,10 @@ namespace Radiator {
 
         private Timer _pageCycleTimer;
         private readonly ObservableCollection<PageMapping> _pageSettings = new ObservableCollection<PageMapping>();
+
+#if KINECT
         private readonly SpeechRecognizer _speechRecognizer = new SpeechRecognizer();
+#endif
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -32,7 +37,9 @@ namespace Radiator {
             get { return _currentUrl; }
             set {
                 _currentUrl = value;
+#if KINECT
                 OnPropertyChanged();
+#endif
             }
         }
 
@@ -42,9 +49,10 @@ namespace Radiator {
                 return;
 
             pages.ForEach(mapping => _pageSettings.Add(mapping));
-
+#if KINECT
             _speechRecognizer.SpeechRecognized += OnSpeechRecognized;
             _speechRecognizer.StartListening(GetVoiceCommands());
+#endif
 
             Urls.Clear();
             Urls.AddRange(pages.Select(p => p.Url));
@@ -73,18 +81,20 @@ namespace Radiator {
             return Urls[nextIndex];
         }
 
-        private IEnumerable<SemanticResultValue> GetVoiceCommands() {
-            return _pageSettings.Select(p => new SemanticResultValue(p.VoiceCommand, p.Url));
-        }
+#if KINECT
+                private IEnumerable<SemanticResultValue> GetVoiceCommands() {
+                    return _pageSettings.Select(p => new SemanticResultValue(p.VoiceCommand, p.Url));
+                }
 
-        private void OnSpeechRecognized(object sender, RecognizedEventArgs args) {
-            _pageCycleTimer.Change(IN_USE_DELAY, PAGE_CYCLE_DELAY);
-            CurrentUrl = args.Value;
-        }
+            private void OnSpeechRecognized(object sender, RecognizedEventArgs args) {
+                _pageCycleTimer.Change(IN_USE_DELAY, PAGE_CYCLE_DELAY);
+                CurrentUrl = args.Value;
+            }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+                if (PropertyChanged != null)
+                    PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+#endif
     }
 }
