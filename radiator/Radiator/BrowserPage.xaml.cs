@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,6 +18,7 @@ namespace Radiator {
 
         private static void PropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
             var browser = (BrowserPage)sender;
+            HideScriptErrors(browser.Browser, true);
             browser.Browser.Source = new Uri((string)args.NewValue);
         }
 
@@ -26,6 +28,7 @@ namespace Radiator {
             var binding = new Binding("CurrentUrl");
             SetBinding(CurrentUrlProperty, binding);
 
+            HideScriptErrors(Browser, true);
             Loaded += OnBrowserPageLoaded;
             Unloaded += OnBrowserPageUnloaded;
         }
@@ -38,8 +41,21 @@ namespace Radiator {
             ViewModel.Unload();
         }
 
-        private BrowserViewModel ViewModel {
+        public BrowserViewModel ViewModel {
             get { return (BrowserViewModel)DataContext; }
+        }
+
+        public static void HideScriptErrors(WebBrowser wb, bool Hide)
+        {
+            System.Reflection.FieldInfo fiComWebBrowser = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (fiComWebBrowser == null) return;
+
+            object objComWebBrowser = fiComWebBrowser.GetValue(wb);
+
+            if (objComWebBrowser == null) return;
+
+            objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { Hide });
         }
     }
 }

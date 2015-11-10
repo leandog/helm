@@ -10,6 +10,10 @@
         Title="MainWindow" Style="{DynamicResource NavigationWindowStyle}">
     <NavigationWindow.CommandBindings>
         <CommandBinding Command="{x:Static local:Commands.ShowSettingsCommand}" 
-                        CanExecute="CanShowSettings" Executed="ShowSettings"/>
+                        CanExecute="CanShowSettings" Executed="ShowSettings" />
+        <CommandBinding Command="{x:Static local:Commands.NextPageCommand}" 
+                        CanExecute="CanShowSettings" Executed="NextPage" />
+        <CommandBinding Command="{x:Static local:Commands.PrevPageCommand}" 
+                        CanExecute="CanShowSettings" Executed="PrevPage" />
     </NavigationWindow.CommandBindings>
 </NavigationWindow>

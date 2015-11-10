@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using Akavache;
+using System;
 
 namespace Radiator {
 
@@ -15,12 +16,24 @@ namespace Radiator {
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs args) {
-            var pages = await BlobCache.UserAccount.GetOrCreateObject("Pages", () => new List<PageMapping>());
+            try
+            {
+                var pages = await BlobCache.UserAccount.GetOrCreateObject("Pages", () => new List<PageMapping>());
+                pages.ForEach(mapping => new Uri(((PageMapping)mapping).Url));
 
-            if (pages.Count == 0)
+                if (pages.Count == 0)
+                {
+                    Navigate(new SettingsPage());
+                }
+                else
+                {
+                    Navigate(new BrowserPage());
+                }
+            }
+            catch (Exception e)
+            {
                 Navigate(new SettingsPage());
-            else
-                Navigate(new BrowserPage());
+            }
         }
 
         private void CanShowSettings(object sender, CanExecuteRoutedEventArgs args) {
@@ -31,6 +44,23 @@ namespace Radiator {
         private void ShowSettings(object sender, ExecutedRoutedEventArgs args) {
             args.Handled = true;
             Navigate(new SettingsPage());
+        }
+
+        private void NextPage(object sender, ExecutedRoutedEventArgs args)
+        {
+            args.Handled = true;
+            if ((Content.GetType() == typeof(BrowserPage)))
+            {
+                BrowserPage bp = (BrowserPage)Content;
+                bp.ViewModel.NextPage();
+            }
+        }
+
+        private void PrevPage(object sender, ExecutedRoutedEventArgs args)
+        {
+            args.Handled = true;
+            BrowserPage bp = (BrowserPage)Content;
+            bp.ViewModel.PrevPage();
         }
     }
 }

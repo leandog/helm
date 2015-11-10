@@ -37,9 +37,7 @@ namespace Radiator {
             get { return _currentUrl; }
             set {
                 _currentUrl = value;
-#if KINECT
                 OnPropertyChanged();
-#endif
             }
         }
 
@@ -70,8 +68,18 @@ namespace Radiator {
                 _pageCycleTimer.Dispose();
         }
 
-        private void OnPageCycleTimer(object state) {
+        public void NextPage()
+        {
             CurrentUrl = GetNextUrl(CurrentUrl);
+        }
+
+        public void PrevPage()
+        {
+            CurrentUrl = GetPrevUrl(CurrentUrl);
+        }
+
+        private void OnPageCycleTimer(object state) {
+            NextPage();
         }
 
         private string GetNextUrl(string currentUrl) {
@@ -84,8 +92,20 @@ namespace Radiator {
             return Urls[nextIndex];
         }
 
+        private string GetPrevUrl(string currentUrl)
+        {
+            var currentIndex = Urls.IndexOf(currentUrl);
+            var nextIndex = Urls.Count - 1;
+            if (currentIndex > 0)
+            {
+                nextIndex = currentIndex - 1;
+            }
+
+            return Urls[nextIndex];
+        }
+
 #if KINECT
-                private IEnumerable<SemanticResultValue> GetVoiceCommands() {
+        private IEnumerable<SemanticResultValue> GetVoiceCommands() {
                     return _pageSettings.Select(p => new SemanticResultValue(p.VoiceCommand, p.Url));
                 }
 
@@ -93,11 +113,11 @@ namespace Radiator {
                 _pageCycleTimer.Change(IN_USE_DELAY, PAGE_CYCLE_DELAY);
                 CurrentUrl = args.Value;
             }
+#endif
 
-            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
                 if (PropertyChanged != null)
                     PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
-#endif
     }
 }
