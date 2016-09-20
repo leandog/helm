@@ -5,7 +5,7 @@
 
 USB usb;
 USBHub hub(&usb);
-HIDBoot<HID_PROTOCOL_MOUSE> hid_mouse(&usb);
+HIDBoot<USB_HID_PROTOCOL_MOUSE> hid_mouse(&usb);
 uint32_t next_time;
 MouseHandler mouse_handler;
 
